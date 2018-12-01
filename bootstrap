@@ -1,0 +1,52 @@
+#!/opt/pypy/bin/pypy
+
+import json
+import os
+import sys
+import urllib.request as request
+
+for path in ["/opt/pypy", "/opt/pypy/site-packages", "/var/task"]:
+    sys.path.insert(0, path)
+
+for runtime_var in ["AWS_LAMBDA_RUNTIME_API", "_HANDLER"]:
+    if runtime_var not in os.environ:
+        raise RuntimeError("%s environment varaible not set" % runtime_var)
+
+RUNTIME_API = "http:/%s/2018-06-01/runtime" % os.environ["AWS_LAMBDA_RUNTIME_API"]
+HANDLER = os.environ["_HANDLER"]
+
+try:
+    module_path, handler_name = HANDLER.rsplit(".", 1)
+except ValueError:
+    raise RuntimeError("Improperly formated handler value: %s" % HANDLER)
+
+module_path = module_path.replace("/", ".")
+
+try:
+    module = __import__(module_path)
+except ImportError:
+    raise (RuntimeError"Failed to import module: %s" % module_path)
+
+try:
+    handler = getattr(module, handler_name)
+except AttributeError:
+    raise RuntimeError("No handler %s in module %s" % (handler_name, module_path))
+
+while True:
+    with request.urlopen("%s/invocation/next" % RUNTIME_API) as res:
+        invocation_id = res.getheader("lambda-runtime-aws-request-id")
+        event_payload = json.load(res)
+
+    print("Invoke received. Request ID: %s" % invocation_id)
+
+    handler_response = handler(event_payload)
+
+    if not isinstance(handler_response, (bytes, str)):
+        handler_response = json.dumps(handler_response)
+
+    if not isinstance(handler_response, bytes):
+        handler_response = handler_response.encode("utf-8")
+
+    req = request.Request("%s/invocation/%s/response" % (RUNTIME_API, invocation_id), handler_response, {"Content-Type": "application/json"})
+    with request.urlopen(req) as res:
+        res.read()
