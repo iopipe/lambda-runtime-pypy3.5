@@ -10,7 +10,7 @@ for path in ["/opt/pypy", "/opt/pypy/site-packages", "/var/task"]:
 
 for runtime_var in ["AWS_LAMBDA_RUNTIME_API", "_HANDLER"]:
     if runtime_var not in os.environ:
-        raise RuntimeError("%s environment varaible not set" % runtime_var)
+        raise RuntimeError("%s environment variable not set" % runtime_var)
 
 RUNTIME_API = "http:/%s/2018-06-01/runtime" % os.environ["AWS_LAMBDA_RUNTIME_API"]
 HANDLER = os.environ["_HANDLER"]
