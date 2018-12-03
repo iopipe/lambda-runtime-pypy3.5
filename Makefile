@@ -8,4 +8,4 @@ publish: pypy35.zip
 	./publish.sh
 
 clean:
-	rm pypy35.zip
+	rm -rf layer pypy35.zip

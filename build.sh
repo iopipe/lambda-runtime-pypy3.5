@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 VERSION=6.0.0
 
