@@ -1,3 +1,5 @@
+all: clean pypy35.zip upload publish
+
 pypy35.zip:
 	./build.sh
 
@@ -9,3 +11,6 @@ publish: pypy35.zip
 
 clean:
 	rm -rf layer pypy35.zip
+
+shell:
+	docker run --rm -v "$PWD"/layer:/opt lambci/lambda:build-provided bash

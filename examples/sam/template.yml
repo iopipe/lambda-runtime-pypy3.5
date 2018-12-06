@@ -1,0 +1,16 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: "IOPipe PyPy 3.5 Runtime SAM Example"
+
+Globals:
+  Function:
+    Layers:
+        - arn:aws:lambda:us-east-1:146318645305:layer:pypy35:1
+
+Resources:
+  IOpipePyPy35Example:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      CodeUri: hello/
+      Handler: hello.handler
+      Runtime: provided

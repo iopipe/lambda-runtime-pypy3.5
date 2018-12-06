@@ -3,7 +3,7 @@
 source regions.sh
 
 MD5SUM=$(md5 -q pypy35.zip)
-S3KEY="pypy3.5/${MD5SUM}"
+S3KEY="pypy3.5/${MD5SUM}.zip"
 
 for region in "${PYPY35_REGIONS[@]}"; do
   bucket_name="iopipe-layers-${region}"
