@@ -24,9 +24,11 @@ This runtime is published as an [AWS LAmbda Layer](https://docs.aws.amazon.com/l
 
 More regions to come.
 
+For an example of how to use AWS Lambda Layers, see this [SAM example](https://github.com/iopipe/lambda-runtime-pypy3.5/tree/master/examples/sam).
+
 ## Build
 
-To build this layer:
+To build this runtime as a layer:
 
 ```bash
 make pypy35.zip
